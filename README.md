@@ -165,9 +165,8 @@ type Position = 'bottom-right' | 'top-right' | 'bottom-left' | 'top-left';
 
 ## 🔧 Конфигурация
 
-### Jest для тестирования
+### Jest для тестирования (jest.config.js)
 ```javascript
-// jest.config.js
 module.exports = {
   testEnvironment: 'jsdom',
   moduleNameMapper: {
@@ -177,9 +176,8 @@ module.exports = {
 };
 ```
 
-### TypeScript с алиасами
+### TypeScript с алиасами (tsconfig.json)
 ```json
-// tsconfig.json
 {
   "compilerOptions": {
     "baseUrl": ".",
