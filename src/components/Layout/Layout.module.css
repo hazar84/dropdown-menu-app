@@ -1,0 +1,116 @@
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  min-height: 200vh;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 40px;
+  padding: 20px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.header h1 {
+  color: #2d3748;
+  margin-bottom: 10px;
+}
+
+.actionInfo {
+  padding: 10px;
+  background: #edf2f7;
+  border-radius: 6px;
+  color: #4a5568;
+}
+
+.sections {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  margin-bottom: 60px;
+}
+
+.section {
+  padding: 30px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e2e8f0;
+}
+
+.section h2 {
+  margin-bottom: 20px;
+  color: #2d3748;
+  font-size: 1.5rem;
+}
+
+.dropdownContainer {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.section:nth-child(2) .dropdownContainer {
+  justify-content: center;
+}
+
+.section:nth-child(3) .dropdownContainer {
+  justify-content: flex-end;
+}
+
+.buttonTrigger {
+  padding: 10px 20px;
+  background: #4299e1;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.buttonTrigger:hover {
+  background: #3182ce;
+}
+
+.iconTrigger {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #edf2f7;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  font-size: 20px;
+  color: #4a5568;
+}
+
+.iconTrigger:hover {
+  background: #e2e8f0;
+}
+
+.scrollContent {
+  margin-top: 60px;
+  padding: 30px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.scrollContent h3 {
+  margin-bottom: 20px;
+  color: #2d3748;
+}
+
+.scrollItem {
+  padding: 15px;
+  margin: 10px 0;
+  background: #f7fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  color: #4a5568;
+}
