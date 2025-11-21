@@ -1,7 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import DropdownMenu from './DropdownMenu';
-import { useDropdown } from '@/hooks/useDropdown';
 
+// Mock с алиасами
 jest.mock('@/hooks/useDropdown', () => ({
   useDropdown: jest.fn()
 }));
@@ -18,6 +17,10 @@ jest.mock('./DropdownMenu.module.css', () => ({
   icon: 'icon',
   label: 'label',
 }));
+
+// Импортируем с алиасами
+import DropdownMenu from './DropdownMenu';
+import { useDropdown } from '@/hooks/useDropdown';
 
 const mockUseDropdown = useDropdown as jest.MockedFunction<typeof useDropdown>;
 
@@ -49,6 +52,7 @@ describe('DropdownMenu Component', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     
+    // Обновленный mock с новой структурой
     mockUseDropdown.mockReturnValue({
       isOpen: false,
       position: 'bottom-right',
@@ -56,6 +60,7 @@ describe('DropdownMenu Component', () => {
       contentRef: { current: null },
       toggle: jest.fn(),
       close: jest.fn(),
+      open: jest.fn(), // Добавлена функция open
     });
   });
 
@@ -83,6 +88,7 @@ describe('DropdownMenu Component', () => {
       contentRef: { current: null },
       toggle: mockToggle,
       close: jest.fn(),
+      open: jest.fn(), // Добавлена функция open
     });
 
     render(
@@ -108,6 +114,7 @@ describe('DropdownMenu Component', () => {
       contentRef: { current: null },
       toggle: jest.fn(),
       close: jest.fn(),
+      open: jest.fn(), // Добавлена функция open
     });
 
     render(
@@ -133,6 +140,7 @@ describe('DropdownMenu Component', () => {
       contentRef: { current: null },
       toggle: jest.fn(),
       close: mockClose,
+      open: jest.fn(), // Добавлена функция open
     });
 
     render(

@@ -1,11 +1,11 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import type { Position } from '@/types/dropdown';
 
-let activeDropdown: (() => void) | null = null;
-
 export const useDropdown = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [position, setPosition] = useState<Position>('bottom-right');
+  const [wasVisible, setWasVisible] = useState(false); // Для отслеживания повторного открытия
+  
   const triggerRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
 
@@ -42,34 +42,28 @@ export const useDropdown = () => {
     setPosition(newPosition);
   }, []);
 
-  const close = useCallback(() => {
-    setIsOpen(false);
-    if (activeDropdown === close) {
-      activeDropdown = null;
-    }
-  }, []);
+  // Простые функции управления состоянием
+  const close = useCallback(() => setIsOpen(false), []);
+  const open = useCallback(() => setIsOpen(true), []);
 
+  // Упрощенный toggle без глобальной переменной
   const toggle = useCallback(() => {
-    setIsOpen(prev => {
-      const newState = !prev;
-      
-      if (newState) {
-        if (activeDropdown && activeDropdown !== close) {
-          activeDropdown();
-        }
-        activeDropdown = close;
-        setTimeout(calculatePosition, 0);
-      } else {
-        if (activeDropdown === close) {
-          activeDropdown = null;
-        }
-      }
-      
-      return newState;
-    });
-  }, [close, calculatePosition]);
+    if (isOpen) {
+      close();
+    } else {
+      open();
+      setTimeout(calculatePosition, 0);
+    }
+  }, [isOpen, close, open, calculatePosition]);
 
   useEffect(() => {
+    // Функция проверки видимости триггера
+    const checkTriggerVisibility = () => {
+      if (!triggerRef.current) return false;
+      const rect = triggerRef.current.getBoundingClientRect();
+      return rect.top < window.innerHeight && rect.bottom > 0;
+    };
+
     const handleClickOutside = (event: MouseEvent) => {
       if (
         triggerRef.current && 
@@ -81,16 +75,23 @@ export const useDropdown = () => {
       }
     };
 
+    // Исправленный обработчик скролла с функционалом "отображать снова"
     const handleScroll = () => {
+      const isCurrentlyVisible = checkTriggerVisibility();
+      
       if (isOpen) {
         calculatePosition();
         
-        if (triggerRef.current) {
-          const rect = triggerRef.current.getBoundingClientRect();
-          const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
-          if (!isVisible) {
-            close();
-          }
+        // Закрываем если триггер скрылся из viewport
+        if (!isCurrentlyVisible) {
+          close();
+          setWasVisible(true); // Запоминаем что был открыт для повторного открытия
+        }
+      } else {
+        // ОТКРЫВАЕМ СНОВА если триггер появился и ранее был открыт
+        if (isCurrentlyVisible && wasVisible) {
+          open();
+          setWasVisible(false); // Сбрасываем флаг
         }
       }
     };
@@ -105,6 +106,9 @@ export const useDropdown = () => {
       document.addEventListener('mousedown', handleClickOutside);
       window.addEventListener('scroll', handleScroll, true);
       window.addEventListener('resize', handleResize);
+    } else {
+      // Слушаем скролл даже когда закрыт для функционала повторного открытия
+      window.addEventListener('scroll', handleScroll, true);
     }
 
     return () => {
@@ -112,15 +116,7 @@ export const useDropdown = () => {
       window.removeEventListener('scroll', handleScroll, true);
       window.removeEventListener('resize', handleResize);
     };
-  }, [isOpen, close, calculatePosition]);
-
-  useEffect(() => {
-    return () => {
-      if (activeDropdown === close) {
-        activeDropdown = null;
-      }
-    };
-  }, [close]);
+  }, [isOpen, close, open, calculatePosition, wasVisible]); // Добавлена зависимость wasVisible
 
   return {
     isOpen,
@@ -129,5 +125,6 @@ export const useDropdown = () => {
     contentRef,
     toggle,
     close,
+    open, // Добавлена функция open для тестов
   };
 };
